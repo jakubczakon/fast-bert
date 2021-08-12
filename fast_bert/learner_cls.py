@@ -539,6 +539,7 @@ class BertLearnerWithNeptune(BertLearner):
 
         # Neptune Log
         run['Validate/eval_loss'].log(eval_loss)
+        run['Validate/loss'] = results
 
         if return_preds:
             results["y_preds"] = np.argmax(all_logits.detach().cpu().numpy(), axis=1)
@@ -553,6 +554,9 @@ class BertLearnerWithNeptune(BertLearner):
             results.update(validation_scores)
 
         return results
+        # Neptune Log
+        run['Evaluation/validation_scores'].log(validation_scores)
+        run['Evaluation/scores'] = results
 
     ### Return Predictions ###
     def predict_batch(self, texts=None):
