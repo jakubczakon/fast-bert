@@ -165,7 +165,7 @@ def load_model(
     return model.to(device)
 
 
-class BertLearnerWithNeptune(BertLearner):
+class BertLearner(Learner):
     @staticmethod
     def from_pretrained_model(
         dataBunch,
