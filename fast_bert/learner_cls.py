@@ -166,7 +166,7 @@ def load_model(
 
 
 class BertLearner(Learner):
-
+    @staticmethod
     def from_pretrained_model(
         dataBunch,
         pretrained_path,
@@ -174,6 +174,7 @@ class BertLearner(Learner):
         metrics,
         device,
         logger,
+        neptune_run,
         finetuned_wgts_path=None,
         multi_gpu=True,
         is_fp16=True,
@@ -188,7 +189,6 @@ class BertLearner(Learner):
         freeze_transformer_layers=False,
         pos_weight=None,
         weight=None,
-        neptune_run=run,
     ):
         if is_fp16 and (IS_AMP_AVAILABLE is False):
             logger.debug("Apex not installed. switching off FP16 training")
@@ -212,6 +212,7 @@ class BertLearner(Learner):
             metrics,
             device,
             logger,
+            neptune_run,
             multi_gpu,
             is_fp16,
             loss_scale,
