@@ -167,6 +167,10 @@ def load_model(
 
 class BertLearner(Learner):
     @staticmethod
+    
+    # Neptune
+    self.neptune_run = run
+
     def from_pretrained_model(
         dataBunch,
         pretrained_path,
@@ -280,9 +284,6 @@ class BertLearner(Learner):
             for name, param in self.model.named_parameters():
                 if name.startswith(data.model_type):
                     param.requires_grad = False
-
-        # Neptune
-        self.neptune_run = run
 
     ### Train the model ###
     def fit(
