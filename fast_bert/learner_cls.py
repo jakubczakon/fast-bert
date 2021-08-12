@@ -166,10 +166,6 @@ def load_model(
 
 
 class BertLearner(Learner):
-    @staticmethod
-    
-    # Neptune
-    self.neptune_run = run
 
     def from_pretrained_model(
         dataBunch,
@@ -238,6 +234,7 @@ class BertLearner(Learner):
         metrics,
         device,
         logger,
+        neptune_run,
         multi_gpu=True,
         is_fp16=True,
         loss_scale=0,
@@ -248,7 +245,7 @@ class BertLearner(Learner):
         max_grad_norm=1.0,
         adam_epsilon=1e-8,
         logging_steps=100,
-        freeze_transformer_layers=False,
+        freeze_transformer_layers=False
     ):
 
         super(BertLearner, self).__init__(
@@ -276,7 +273,10 @@ class BertLearner(Learner):
         self.history = {"lr": [], "loss": []}
         self.best_loss = None
         self.state_cacher = None
-
+    
+        # Neptune
+        self.neptune_run = neptune_run
+        
         self.scaler = torch.cuda.amp.GradScaler() if is_fp16 is True else None
 
         # Freezing transformer model layers
@@ -462,7 +462,7 @@ class BertLearner(Learner):
         if self.n_gpu > 1:
             loss = loss.mean()
         # Neptune Log 
-        run['Train/train_batch_loss'].log(loss)
+        self.neptune_run['Train/train_batch_loss'].log(loss)
       
         if self.grad_accumulation_steps > 1:
             loss = loss / self.grad_accumulation_steps
@@ -540,8 +540,8 @@ class BertLearner(Learner):
         results = {"loss": eval_loss}
 
         # Neptune Log
-        run['Validate/eval_loss'].log(eval_loss)
-        run['Validate/loss'] = results
+        self.neptune_run['Validate/eval_loss'].log(eval_loss)
+        self.neptune_run['Validate/loss'] = results
 
         if return_preds:
             results["y_preds"] = np.argmax(all_logits.detach().cpu().numpy(), axis=1)
@@ -557,8 +557,8 @@ class BertLearner(Learner):
 
         return results
         # Neptune Log
-        run['Evaluation/validation_scores'].log(validation_scores)
-        run['Evaluation/scores'] = results
+        self.neptune_run['Evaluation/validation_scores'].log(validation_scores)
+        self.neptune_run['Evaluation/scores'] = results
 
     ### Return Predictions ###
     def predict_batch(self, texts=None):
