@@ -188,6 +188,7 @@ class BertLearner(Learner):
         freeze_transformer_layers=False,
         pos_weight=None,
         weight=None,
+        neptune_run=run,
     ):
         if is_fp16 and (IS_AMP_AVAILABLE is False):
             logger.debug("Apex not installed. switching off FP16 training")
@@ -281,7 +282,7 @@ class BertLearner(Learner):
                     param.requires_grad = False
 
         # Neptune
-        self.neptune_run = run in here
+        self.neptune_run = run
 
     ### Train the model ###
     def fit(
