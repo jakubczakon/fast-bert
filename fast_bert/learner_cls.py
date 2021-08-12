@@ -165,7 +165,7 @@ def load_model(
     return model.to(device)
 
 
-class BertLearner(Learner):
+class BertLearnerWithNeptune(BertLearner):
     @staticmethod
     def from_pretrained_model(
         dataBunch,
@@ -279,6 +279,9 @@ class BertLearner(Learner):
             for name, param in self.model.named_parameters():
                 if name.startswith(data.model_type):
                     param.requires_grad = False
+
+        # Neptune
+        self.neptune_run = run in here
 
     ### Train the model ###
     def fit(
@@ -456,7 +459,9 @@ class BertLearner(Learner):
 
         if self.n_gpu > 1:
             loss = loss.mean()
-
+        # Neptune Log 
+        run['Train/train_batch_loss'].log(loss)
+      
         if self.grad_accumulation_steps > 1:
             loss = loss / self.grad_accumulation_steps
 
@@ -531,6 +536,9 @@ class BertLearner(Learner):
         eval_loss = eval_loss / nb_eval_steps
 
         results = {"loss": eval_loss}
+
+        # Neptune Log
+        run['Validate/eval_loss'].log(eval_loss)
 
         if return_preds:
             results["y_preds"] = np.argmax(all_logits.detach().cpu().numpy(), axis=1)
