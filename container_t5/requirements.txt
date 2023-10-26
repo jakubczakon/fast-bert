@@ -10,3 +10,4 @@ python-box
 tensorboardX
 transformers==2.11.0
 pytorch_lightning
+werkzeug>=3.0.1 # not directly required, pinned by Snyk to avoid a vulnerability
