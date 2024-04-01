@@ -10,3 +10,4 @@ transformers==3.0.2
 pandas
 python-box
 more-itertools
+pillow>=10.3.0 # not directly required, pinned by Snyk to avoid a vulnerability
