@@ -10,3 +10,5 @@ transformers==3.0.2
 pandas
 python-box
 more-itertools
+numpy>=1.21.0rc1 # not directly required, pinned by Snyk to avoid a vulnerability
+setuptools>=65.5.1 # not directly required, pinned by Snyk to avoid a vulnerability
