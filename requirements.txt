@@ -10,3 +10,4 @@ transformers==3.0.2
 pandas
 python-box
 more-itertools
+setuptools>=70.0.0 # not directly required, pinned by Snyk to avoid a vulnerability
