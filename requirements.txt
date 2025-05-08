@@ -6,7 +6,8 @@ sklearn
 spacy
 seqeval
 tokenizers==0.8.1.rc1
-transformers==3.0.2
+transformers==4.50.0
 pandas
 python-box
 more-itertools
+setuptools>=78.1.1 # not directly required, pinned by Snyk to avoid a vulnerability
